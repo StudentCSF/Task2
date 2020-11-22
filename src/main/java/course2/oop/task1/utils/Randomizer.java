@@ -1,13 +1,21 @@
 package course2.oop.task1.utils;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
 public final class Randomizer {
-    private static final Random rnd = new Random();
+    private final Random rnd = new Random();
 
-    public final <T> T random(List<T> list) {
-        return list.get(rnd.nextInt(list.size() - 1));
+    public final <T> T random(Collection<T> list)
+    {
+        int i = 0;
+        int r = rnd.nextInt(list.size());
+        for (T v : list) {
+            if (i == r) return v;
+            i++;
+        }
+        return null;
     }
 
     public final int random(int from, int to) {

@@ -1,6 +1,7 @@
 package course2.oop.task1;
 
-import course2.oop.task1.supermarket.Supermarket;
+import course2.oop.task1.data.supermarket.Supermarket;
+import course2.oop.task1.services.MainService;
 
 public class Main {
 

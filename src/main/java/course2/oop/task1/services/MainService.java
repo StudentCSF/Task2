@@ -1,0 +1,130 @@
+package course2.oop.task1.services;
+
+import course2.oop.task1.MainServiceRapporteur;
+import course2.oop.task1.data.products.BaseProduct;
+import course2.oop.task1.data.buyer.Buyer;
+import course2.oop.task1.data.buyer.BuyerLimitations;
+import course2.oop.task1.data.products.drink.BaseDrink;
+import course2.oop.task1.data.products.chem.BaseHouseholdChemicals;
+import course2.oop.task1.data.products.green_grocery.BaseGreenGrocery;
+import course2.oop.task1.data.products.meat.BaseMeat;
+import course2.oop.task1.data.products.milk.BaseMilkProducts;
+import course2.oop.task1.data.supermarket.Supermarket;
+import course2.oop.task1.utils.Randomizer;
+import org.apache.commons.collections4.KeyValue;
+import org.apache.commons.collections4.keyvalue.DefaultKeyValue;
+
+import java.util.*;
+
+public class MainService {
+    private final Randomizer rdz;
+    private final SupermarketService supServ;
+    private final BuyerService buyServ;
+    private final ProductService prodServ;
+    private final MainServiceRapporteur rapporteur;
+
+    private int buyersCounter = 1;
+
+    private final List<KeyValue<Integer, Buyer>> buyersInSupermarket = new ArrayList<>();
+
+    public MainService() {
+        rdz = new Randomizer();
+        supServ = new SupermarketService();
+        buyServ = new BuyerService();
+        prodServ = new ProductService();
+        rapporteur = new MainServiceRapporteur();
+    }
+
+    public void simulate(Supermarket market) {
+        int currDate = 0;
+        for (int i = 0; i < 10000; i++) {
+            int curr = rdz.random(0, 5);
+            switch (curr) {
+                case 0:
+                    Buyer b = new Buyer();
+                    buyServ.setBuyer(b);
+                    buyerArrived(b);
+                    rapporteur.report("Пришел покупатель #" + buyersCounter);
+                    buyersCounter++;
+                    break;
+                case 1:
+                    if (!buyersInSupermarket.isEmpty()) {
+                        buyerPurchase(market, buyersInSupermarket.get(rdz.random(0, buyersInSupermarket.size())));
+                    }
+                    break;
+                case 2:
+                    productsBroughtToSupermarket(market, currDate);
+                    rapporteur.report("Привезли товары");
+                    break;
+                case 3:
+                    supServ.checkProducts(market, currDate);
+                    rapporteur.report("Персонал проверил товары на годность");
+                    break;
+                case 4:
+                    supServ.simpleMoveFromStorageToHall(market);
+                    rapporteur.report("Товары со склада перенесли в торговый зал");
+                    break;
+                default:
+                    continue;
+            }
+            if (i % 100 == 0) {
+                currDate++;
+            }
+        }
+    }
+
+    private void buyerArrived(Buyer b) {
+        buyersInSupermarket.add(new DefaultKeyValue<>(buyersCounter, b));
+    }
+
+    private void buyerPurchase(Supermarket market, KeyValue<Integer, Buyer> b) {
+        Map<BaseProduct, Double> lp = b.getValue().getShoppingList();
+        for (Map.Entry<BaseProduct, Double> kv : lp.entrySet()) {
+            if (supServ.hasProduct(market, true, kv.getKey())) {
+                if (canPurchase(b, kv.getKey())) {
+                    double currCost = kv.getKey().getCost() * kv.getValue();
+                    if (currCost < b.getValue().getAvailableMoney()) {
+                        BaseProduct realKey = supServ.getSimilar(market, kv.getKey());
+                        market.getHall().getProducts().put(realKey, market.getHall().getProducts().get(realKey) - kv.getValue());
+                        b.getValue().setAvailableMoney(b.getValue().getAvailableMoney() - currCost);
+                        rapporteur.report("Покупатель #" + b.getKey() + " купил " + kv.getValue() + " " + kv.getKey().getMeasureUnit() + " " + kv.getKey());
+                    } else {
+                        rapporteur.report("У покупателя #" + b.getKey() + " не хватает денег на данный товар");
+                    }
+                }
+            } else {
+                rapporteur.report("Покупатель #" + b.getKey() + " не нашел нужного товара в магазине");
+            }
+        }
+        buyersInSupermarket.remove(b);
+    }
+
+    private boolean canPurchase(KeyValue<Integer, Buyer> b, BaseProduct p) {
+        if (p instanceof BaseDrink && b.getValue().getAge() < 18) {
+            return false;
+        }
+        Set<BuyerLimitations> l = b.getValue().getLimitations();
+        if (p instanceof BaseMeat && l.contains(BuyerLimitations.MEAT)) {
+            rapporteur.report("Покупатель #" + b.getKey() + " пытается купить алкоголь, но ему не продают в силу возраста");
+            return false;
+        }
+        if (p instanceof BaseMilkProducts && l.contains(BuyerLimitations.MILK)) {
+            rapporteur.report("Покупатель #" + b.getKey() + " не будет покупать молоко, т.к. у него его непереносимость");
+            return false;
+        }
+        if (p instanceof BaseHouseholdChemicals && l.contains(BuyerLimitations.CHEM)) {
+            rapporteur.report("Покупатель #" + b.getKey() + " не будет покупать химию, т.к. у него на неё аллергия");
+            return false;
+        }
+        if (p instanceof BaseGreenGrocery && l.contains(BuyerLimitations.VaF)) {
+            rapporteur.report("Покупатель #" + b.getKey() + " не будет покупать фрукты и овощи, т.к. у него непереносимость клетчатки");
+            return false;
+        }
+        return true;
+    }
+
+    private void productsBroughtToSupermarket(Supermarket market, int date) {
+        Map<BaseProduct, Double> brought = prodServ.createRandomProductsSet(rdz.random(300, 1000), date);
+        supServ.addStorage(market, brought);
+    }
+}
