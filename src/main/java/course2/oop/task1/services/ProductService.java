@@ -22,10 +22,19 @@ import course2.oop.task1.utils.Randomizer;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Класс, способный устанавливать случайные параметры проудкту
+ */
 public class ProductService {
 
     private final Randomizer rdz = new Randomizer();
 
+    /**
+     * метод, создающий случайный набор продуктов
+     * @param bound - количество генерируемых товаров
+     * @param currDate - актуальная дата
+     * @return набор продуктов
+     */
     public Map<BaseProduct, Double> createRandomProductsSet(int bound, int currDate)  {
         Map<BaseProduct, Double> res = new HashMap<>();
 
@@ -44,6 +53,11 @@ public class ProductService {
         return res;
     }
 
+    /**
+     * методд, устанавливающий случайные параметры продукту
+     * @param prod - продукт
+     * @param date - дата производства
+     */
     private void setRandomProduct(BaseProduct prod, int date) {
         prod.setCost(rdz.random(20.0, 1000.0));
         prod.setExpDate(rdz.random(3, 100));
@@ -52,6 +66,11 @@ public class ProductService {
         }
     }
 
+    /**
+     * метод, возвращающий случайный экземпляр класса, наслдующегося от BaseProduct
+     * @param n - случайное число от 0 до 37(включительно)
+     * @return случайный экземпляр продукта
+     */
     private BaseProduct randomProduct(int n) {
         switch (n) {
             case 0: return new Beer();

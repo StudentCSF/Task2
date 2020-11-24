@@ -1,5 +1,8 @@
 package course2.oop.task1.data.products;
 
+/**
+ * Данный класс является самым общим (родительским) классом для всех продуктов
+ */
 public abstract class BaseProduct {
     protected double cost;
     protected int expDate;

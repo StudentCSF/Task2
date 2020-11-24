@@ -5,7 +5,9 @@ import course2.oop.task1.data.products.BaseProduct;
 import java.util.Map;
 import java.util.Set;
 
-
+/**
+ * Данный класс описывает покупателя
+ */
 public class Buyer {
     private int age;
     private double availableMoney;

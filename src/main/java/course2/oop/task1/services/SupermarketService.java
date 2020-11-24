@@ -7,12 +7,26 @@ import course2.oop.task1.data.supermarket.premise.SupermarketPremise;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Класс, симулирующий работу персонала супермаркета
+ */
 public class SupermarketService {
-
+    /**
+     * метод, заполняющий склад товарами
+     * @param market - супермаркет
+     * @param prods - набор продуктов
+     */
     public void addStorage(Supermarket market, Map<BaseProduct, Double> prods) {
         market.getStorage().getProducts().putAll(prods);
     }
 
+    /**
+     * метод, удаляющий определенный набор продуктов из помещения супермаркета
+     * @param market - супермаркет
+     * @param fromHall - флаг, сигнализирующий из тороговго зала или со склада надо удалить
+     * @param prods - удаляемый набор проуктов
+     * @return удаленный набор продуктов
+     */
     private Map<BaseProduct, Double> removeFromSupermarketPremise(Supermarket market, boolean fromHall,  Map<BaseProduct, Double> prods) {
         Map<BaseProduct, Double> removedProducts = new HashMap<>();
 
@@ -44,10 +58,22 @@ public class SupermarketService {
         return removedProducts;
     }
 
+    /**
+     * метод возвращающий аналогичный товар искомому
+     * @param market - супермаркет
+     * @param prod - искомый продукт
+     * @return аналог искомого продукта
+     */
     public BaseProduct getSimilar(Supermarket market, BaseProduct prod) {
         return getSimilar(market.getHall().getProducts(), prod);
     }
 
+    /**
+     * метод, который среди набора товаров ищет аналог искомому
+     * @param prods - набор товаров, где идет поиск
+     * @param exemplar - искомый товар
+     * @return аналог искомого товара
+     */
     private BaseProduct getSimilar(Map<BaseProduct, Double> prods, BaseProduct exemplar) {
         Class<? extends BaseProduct> cl = exemplar.getClass();
         for(Map.Entry<BaseProduct, Double> kv : prods.entrySet()) {
@@ -58,15 +84,29 @@ public class SupermarketService {
         return null;
     }
 
+    /**
+     * метод, который переносит все товара со склада в торговый зал
+     * @param market - супермаркет
+     */
     public void simpleMoveFromStorageToHall(Supermarket market) {
         market.getHall().getProducts().putAll(removeFromSupermarketPremise(market, false,  market.getStorage().getProducts()));
     }
 
+    /**
+     * метод который изымает товары из торгового зала и переносящий товары на склад
+     * @param market - супермаркет
+     * @param prods - набор изымаемых продуктов
+     */
     public void moveFromHallToStorage(Supermarket market, Map<BaseProduct, Double> prods) {
         Map<BaseProduct, Double> movingProds = removeFromSupermarketPremise(market, true,  prods);
         addStorage(market, movingProds);
     }
 
+    /**
+     * метод, оуществляющий проверку товаров на годность и отправляющий негодные товары на склад
+     * @param market - супермаркет
+     * @param currDate - актуальная дата
+     */
     public void checkProducts(Supermarket market, int currDate) {
         Map<BaseProduct, Double> forRemove = new HashMap<>();
         for (Map.Entry<BaseProduct, Double> kv : market.getHall().getProducts().entrySet()) {
@@ -78,6 +118,13 @@ public class SupermarketService {
         removeFromSupermarketPremise(market, false, forRemove);
     }
 
+    /**
+     * метод, проверяющий есть ли аналог товара в супермаркете
+     * @param market - супермаркет
+     * @param isInHall - где искать: на складе или в торговом зале
+     * @param prod - искомый товар
+     * @return истина, если есть товар, ложь в противном случае
+     */
     public boolean hasProduct(Supermarket market, boolean isInHall,  BaseProduct prod) {
         Map<BaseProduct, Double> prodsInHall;
         if (isInHall) {

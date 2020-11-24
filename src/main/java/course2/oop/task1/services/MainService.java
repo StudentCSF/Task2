@@ -16,6 +16,9 @@ import org.apache.commons.collections4.keyvalue.DefaultKeyValue;
 
 import java.util.*;
 
+/**
+ * Класс, спосбный симулировать работу супермаркета
+ */
 public class MainService {
     private final Randomizer rdz;
     private final SupermarketService supServ;
@@ -35,6 +38,10 @@ public class MainService {
         rapporteur = new MainServiceRapporteur();
     }
 
+    /**
+     * метод, запускающий симуляцию работы супермаркета
+     * @param market - супермаркет
+     */
     public void simulate(Supermarket market) {
         int currDate = 0;
         for (int i = 0; i < 10000; i++) {
@@ -73,10 +80,19 @@ public class MainService {
         }
     }
 
+    /**
+     * метод, который реализует прибытие покупателя в супермаркет
+     * @param b - покупатель
+     */
     private void buyerArrived(Buyer b) {
         buyersInSupermarket.add(new DefaultKeyValue<>(buyersCounter, b));
     }
 
+    /**
+     * метод, который реализует операцию покупки покупателем товаров в супермаркете
+     * @param market - супермаркет
+     * @param b - покупатель
+     */
     private void buyerPurchase(Supermarket market, KeyValue<Integer, Buyer> b) {
         Map<BaseProduct, Double> lp = b.getValue().getShoppingList();
         for (Map.Entry<BaseProduct, Double> kv : lp.entrySet()) {
@@ -99,6 +115,12 @@ public class MainService {
         buyersInSupermarket.remove(b);
     }
 
+    /**
+     * метод, проверяющий возможность совершить покупку товапа покупателем
+     * @param b - покупатель
+     * @param p
+     * @return истина, если покупатель может совершить покупку, в противном случае ложь
+     */
     private boolean canPurchase(KeyValue<Integer, Buyer> b, BaseProduct p) {
         if (p instanceof BaseDrink && b.getValue().getAge() < 18) {
             return false;
@@ -123,6 +145,11 @@ public class MainService {
         return true;
     }
 
+    /**
+     * метод реализующий привоз товаров на склда супермаркета
+     * @param market - маркет
+     * @param date - дата привоза, которая считается эквивалентной дате их производства
+     */
     private void productsBroughtToSupermarket(Supermarket market, int date) {
         Map<BaseProduct, Double> brought = prodServ.createRandomProductsSet(rdz.random(300, 1000), date);
         supServ.addStorage(market, brought);

@@ -5,6 +5,9 @@ import course2.oop.task1.data.products.BaseProduct;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Базовый класс, описывающий помещение супермаркета
+ */
 public abstract class SupermarketPremise {
     protected Map<BaseProduct, Double> products;
 
