@@ -4,15 +4,15 @@ import course2.oop.task1.MainServiceRapporteur;
 import course2.oop.task1.data.products.BaseProduct;
 import course2.oop.task1.data.buyer.Buyer;
 import course2.oop.task1.data.buyer.BuyerLimitations;
-import course2.oop.task1.data.products.drink.BaseDrink;
 import course2.oop.task1.data.products.chem.BaseHouseholdChemicals;
+import course2.oop.task1.data.products.drink.alcohol.BaseAlcohol;
 import course2.oop.task1.data.products.green_grocery.BaseGreenGrocery;
 import course2.oop.task1.data.products.meat.BaseMeat;
 import course2.oop.task1.data.products.milk.BaseMilkProducts;
 import course2.oop.task1.data.supermarket.Supermarket;
-import course2.oop.task1.utils.Randomizer;
 import org.apache.commons.collections4.KeyValue;
 import org.apache.commons.collections4.keyvalue.DefaultKeyValue;
+import org.apache.commons.lang3.RandomUtils;
 
 import java.util.*;
 
@@ -20,7 +20,6 @@ import java.util.*;
  * Класс, спосбный симулировать работу супермаркета
  */
 public class MainService {
-    private final Randomizer rdz;
     private final SupermarketService supServ;
     private final BuyerService buyServ;
     private final ProductService prodServ;
@@ -28,10 +27,9 @@ public class MainService {
 
     private int buyersCounter = 1;
 
-    private final List<KeyValue<Integer, Buyer>> buyersInSupermarket = new ArrayList<>();
+    private final List<KeyValue<Integer, Buyer>> buyersInSupermarket = new ArrayList<KeyValue<Integer, Buyer>>();
 
     public MainService() {
-        rdz = new Randomizer();
         supServ = new SupermarketService();
         buyServ = new BuyerService();
         prodServ = new ProductService();
@@ -45,7 +43,7 @@ public class MainService {
     public void simulate(Supermarket market) {
         int currDate = 0;
         for (int i = 0; i < 10000; i++) {
-            int curr = rdz.random(0, 5);
+            int curr = RandomUtils.nextInt(0, 5);
             switch (curr) {
                 case 0:
                     Buyer b = new Buyer();
@@ -56,7 +54,7 @@ public class MainService {
                     break;
                 case 1:
                     if (!buyersInSupermarket.isEmpty()) {
-                        buyerPurchase(market, buyersInSupermarket.get(rdz.random(0, buyersInSupermarket.size())));
+                        buyerPurchase(market, buyersInSupermarket.get(RandomUtils.nextInt(0, buyersInSupermarket.size())));
                     }
                     break;
                 case 2:
@@ -85,7 +83,7 @@ public class MainService {
      * @param b - покупатель
      */
     private void buyerArrived(Buyer b) {
-        buyersInSupermarket.add(new DefaultKeyValue<>(buyersCounter, b));
+        buyersInSupermarket.add(new DefaultKeyValue<Integer, Buyer>(buyersCounter, b));
     }
 
     /**
@@ -105,11 +103,11 @@ public class MainService {
                         b.getValue().setAvailableMoney(b.getValue().getAvailableMoney() - currCost);
                         rapporteur.report("Покупатель #" + b.getKey() + " купил " + kv.getValue() + " " + kv.getKey().getMeasureUnit() + " " + kv.getKey());
                     } else {
-                        rapporteur.report("У покупателя #" + b.getKey() + " не хватает денег на данный товар");
+                        rapporteur.report("У покупателя #" + b.getKey() + " не хватает денег на " + kv.getKey());
                     }
                 }
             } else {
-                rapporteur.report("Покупатель #" + b.getKey() + " не нашел нужного товара в магазине");
+                rapporteur.report("Покупатель #" + b.getKey() + " не нашел "+ kv.getKey() + " в магазине");
             }
         }
         buyersInSupermarket.remove(b);
@@ -118,28 +116,29 @@ public class MainService {
     /**
      * метод, проверяющий возможность совершить покупку товапа покупателем
      * @param b - покупатель
-     * @param p
+     * @param p - продукт, который пытаются купить
      * @return истина, если покупатель может совершить покупку, в противном случае ложь
      */
     private boolean canPurchase(KeyValue<Integer, Buyer> b, BaseProduct p) {
-        if (p instanceof BaseDrink && b.getValue().getAge() < 18) {
+        if (p instanceof BaseAlcohol && b.getValue().getAge() < 18) {
+            rapporteur.report("Покупатель #" + b.getKey() + " пытается купить " + p + ", но ему не продают в силу возраста");
             return false;
         }
         Set<BuyerLimitations> l = b.getValue().getLimitations();
         if (p instanceof BaseMeat && l.contains(BuyerLimitations.MEAT)) {
-            rapporteur.report("Покупатель #" + b.getKey() + " пытается купить алкоголь, но ему не продают в силу возраста");
+            rapporteur.report("Покупатель #" + b.getKey() + " не будет покупать " + p + ", т.к. у него его непереносимость");
             return false;
         }
         if (p instanceof BaseMilkProducts && l.contains(BuyerLimitations.MILK)) {
-            rapporteur.report("Покупатель #" + b.getKey() + " не будет покупать молоко, т.к. у него его непереносимость");
+            rapporteur.report("Покупатель #" + b.getKey() + " не будет покупать " + p + ", т.к. у него его непереносимость");
             return false;
         }
         if (p instanceof BaseHouseholdChemicals && l.contains(BuyerLimitations.CHEM)) {
-            rapporteur.report("Покупатель #" + b.getKey() + " не будет покупать химию, т.к. у него на неё аллергия");
+            rapporteur.report("Покупатель #" + b.getKey() + " не будет покупать " + p + ", т.к. у него на неё аллергия");
             return false;
         }
         if (p instanceof BaseGreenGrocery && l.contains(BuyerLimitations.VaF)) {
-            rapporteur.report("Покупатель #" + b.getKey() + " не будет покупать фрукты и овощи, т.к. у него непереносимость клетчатки");
+            rapporteur.report("Покупатель #" + b.getKey() + " не будет покупать " + p + ", т.к. у него непереносимость клетчатки");
             return false;
         }
         return true;
@@ -151,7 +150,7 @@ public class MainService {
      * @param date - дата привоза, которая считается эквивалентной дате их производства
      */
     private void productsBroughtToSupermarket(Supermarket market, int date) {
-        Map<BaseProduct, Double> brought = prodServ.createRandomProductsSet(rdz.random(300, 1000), date);
+        Map<BaseProduct, Double> brought = prodServ.createRandomProductsSet(RandomUtils.nextInt(300, 1000), date);
         supServ.addStorage(market, brought);
     }
 }

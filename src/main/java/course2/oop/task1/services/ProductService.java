@@ -17,7 +17,7 @@ import course2.oop.task1.data.products.bread.Loaf;
 import course2.oop.task1.data.products.chem.Powder;
 import course2.oop.task1.data.products.chem.Shampoo;
 import course2.oop.task1.data.products.chem.Soap;
-import course2.oop.task1.utils.Randomizer;
+import org.apache.commons.lang3.RandomUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,8 +27,6 @@ import java.util.Map;
  */
 public class ProductService {
 
-    private final Randomizer rdz = new Randomizer();
-
     /**
      * метод, создающий случайный набор продуктов
      * @param bound - количество генерируемых товаров
@@ -36,17 +34,19 @@ public class ProductService {
      * @return набор продуктов
      */
     public Map<BaseProduct, Double> createRandomProductsSet(int bound, int currDate)  {
-        Map<BaseProduct, Double> res = new HashMap<>();
+        Map<BaseProduct, Double> res = new HashMap<BaseProduct, Double>();
 
         for (int i = 0; i < bound; i++) {
-            BaseProduct prod  = randomProduct(rdz.random(0, 38));
+            BaseProduct prod  = randomProduct(RandomUtils.nextInt(0, 38));
             if (prod == null) continue;
             setRandomProduct(prod, currDate);
             double count;
             if (bound > 100) {
-                count = prod.getMeasureUnit() == MeasureUnit.pcs ? rdz.random(10, 100) : rdz.random(10.0, 100.0);
+                String str = String.valueOf(RandomUtils.nextDouble(10.0, 100.0));
+                count = prod.getMeasureUnit() == MeasureUnit.pcs ? RandomUtils.nextInt(10, 100) : Double.parseDouble(str.substring(0, str.indexOf(".") + 3));
             } else {
-                count = prod.getMeasureUnit() == MeasureUnit.pcs ? rdz.random(1, 10) : rdz.random(0.1, 10.0);
+                String str = String.valueOf(RandomUtils.nextDouble(0.1, 10.0));
+                count = prod.getMeasureUnit() == MeasureUnit.pcs ? RandomUtils.nextInt(1, 10) : Double.parseDouble(str.substring(0, str.indexOf(".") + 3));
             }
             res.put(prod, count);
         }
@@ -59,8 +59,9 @@ public class ProductService {
      * @param date - дата производства
      */
     private void setRandomProduct(BaseProduct prod, int date) {
-        prod.setCost(rdz.random(20.0, 1000.0));
-        prod.setExpDate(rdz.random(3, 100));
+        String str = String.valueOf(RandomUtils.nextDouble(20.0, 500.0));
+        prod.setCost(Double.parseDouble(str.substring(0, str.indexOf(".") + 3)));
+        prod.setExpDate(RandomUtils.nextInt(3, 100));
         if (date > -1) {
             prod.setProductionDate(date);
         }

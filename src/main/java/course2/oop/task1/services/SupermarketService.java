@@ -28,7 +28,7 @@ public class SupermarketService {
      * @return удаленный набор продуктов
      */
     private Map<BaseProduct, Double> removeFromSupermarketPremise(Supermarket market, boolean fromHall,  Map<BaseProduct, Double> prods) {
-        Map<BaseProduct, Double> removedProducts = new HashMap<>();
+        Map<BaseProduct, Double> removedProducts = new HashMap<BaseProduct, Double>();
 
         SupermarketPremise sp;
         if (fromHall) {
@@ -108,7 +108,7 @@ public class SupermarketService {
      * @param currDate - актуальная дата
      */
     public void checkProducts(Supermarket market, int currDate) {
-        Map<BaseProduct, Double> forRemove = new HashMap<>();
+        Map<BaseProduct, Double> forRemove = new HashMap<BaseProduct, Double>();
         for (Map.Entry<BaseProduct, Double> kv : market.getHall().getProducts().entrySet()) {
             if (kv.getKey().getProductionDate() + kv.getKey().getExpDate() > currDate) {
                 forRemove.put(kv.getKey(), kv.getValue());

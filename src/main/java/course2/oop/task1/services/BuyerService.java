@@ -2,7 +2,7 @@ package course2.oop.task1.services;
 
 import course2.oop.task1.data.buyer.Buyer;
 import course2.oop.task1.data.buyer.BuyerLimitations;
-import course2.oop.task1.utils.Randomizer;
+import org.apache.commons.lang3.RandomUtils;
 
 import java.util.*;
 
@@ -10,7 +10,6 @@ import java.util.*;
  * Класс для случайной установки параметров для покупателя
  */
 public class BuyerService {
-    private final Randomizer rdz = new Randomizer();
     private final EnumSet<BuyerLimitations> buyerLims = EnumSet.allOf(BuyerLimitations.class);
 
     /**
@@ -18,9 +17,10 @@ public class BuyerService {
      * @param b - покупатель, котрому будут устанавливаться параметры
      */
     public void setBuyer(Buyer b) {
-        b.setAge(rdz.random(5, 90));
-        b.setShoppingList(new ProductService().createRandomProductsSet(rdz.random(1, 30), -1));
-        b.setAvailableMoney(rdz.random(100.0, 10000.0));
+        b.setAge(RandomUtils.nextInt(5, 90));
+        b.setShoppingList(new ProductService().createRandomProductsSet(RandomUtils.nextInt(1, 30), -1));
+        String str = String.valueOf(RandomUtils.nextDouble(100.0, 10000.0));
+        b.setAvailableMoney(Double.parseDouble(str.substring(0, str.indexOf(".") + 3)));
         createRandomLims(b);
     }
 
@@ -29,12 +29,17 @@ public class BuyerService {
      * @param b - покупатель
      */
     private void createRandomLims(Buyer b) {
-        Set<BuyerLimitations> lims = new HashSet<>();
+        Set<BuyerLimitations> lims = new HashSet<BuyerLimitations>();
 
-        int bound = rdz.random(0, buyerLims.size());
+        int bound = RandomUtils.nextInt(0, buyerLims.size());
         for (int i = 0; i < bound; i++) {
-            if (rdz.random(1, 100) % 3 == 0) {
-                lims.add(rdz.random(buyerLims));
+            if (RandomUtils.nextInt(1, 100) % 3 == 0) {
+                int j = 0;
+                int index = RandomUtils.nextInt(0, buyerLims.size());
+                for (BuyerLimitations curr : buyerLims) {
+                    if (j == index && !lims.contains(curr)) lims.add(curr);
+                    j++;
+                }
             }
         }
         b.setLimitations(lims);
