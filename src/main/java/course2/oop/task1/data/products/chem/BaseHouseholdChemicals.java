@@ -8,7 +8,7 @@ import course2.oop.task1.data.products.MeasureUnit;
  */
 public abstract class BaseHouseholdChemicals extends BaseProduct {
 
-    protected BaseHouseholdChemicals(MeasureUnit mu) {
-        super(mu);
+    protected BaseHouseholdChemicals(MeasureUnit mu, String name) {
+        super(mu, name);
     }
 }

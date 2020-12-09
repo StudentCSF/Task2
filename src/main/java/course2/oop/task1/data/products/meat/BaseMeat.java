@@ -8,7 +8,7 @@ import course2.oop.task1.data.products.MeasureUnit;
  */
 public abstract class BaseMeat extends BaseProduct {
 
-    protected BaseMeat() {
-        super(MeasureUnit.kg);
+    protected BaseMeat(String name) {
+        super(MeasureUnit.kg, name);
     }
 }

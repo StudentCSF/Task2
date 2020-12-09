@@ -1,15 +1,22 @@
 package course2.oop.task1.services;
 
+import com.google.gson.Gson;
 import course2.oop.task1.data.buyer.Buyer;
 import course2.oop.task1.data.buyer.BuyerLimitations;
 import org.apache.commons.lang3.RandomUtils;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 /**
  * Класс для случайной установки параметров для покупателя
  */
 public class BuyerService {
+//    private Gson gson = new Gson();
+    private Integer counter = 0;
+
     private final EnumSet<BuyerLimitations> buyerLims = EnumSet.allOf(BuyerLimitations.class);
 
     /**

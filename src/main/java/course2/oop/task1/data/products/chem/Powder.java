@@ -5,11 +5,6 @@ import course2.oop.task1.data.products.MeasureUnit;
 public class Powder extends BaseHouseholdChemicals {
 
     public Powder() {
-        super(MeasureUnit.kg);
-    }
-
-    @Override
-    public String toString() {
-        return "Порошок";
+        super(MeasureUnit.kg, "Порошок");
     }
 }

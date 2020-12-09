@@ -8,7 +8,7 @@ import course2.oop.task1.data.products.MeasureUnit;
  */
 public abstract class BaseBread extends BaseProduct {
 
-    protected BaseBread() {
-        super(MeasureUnit.pcs);
+    protected BaseBread(String name) {
+        super(MeasureUnit.pcs, name);
     }
 }

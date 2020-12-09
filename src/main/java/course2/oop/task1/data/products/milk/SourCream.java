@@ -5,11 +5,6 @@ import course2.oop.task1.data.products.MeasureUnit;
 public class SourCream extends BaseMilkProducts {
 
     public SourCream() {
-        super(MeasureUnit.liters);
-    }
-
-    @Override
-    public String toString() {
-        return "Сметана";
+        super(MeasureUnit.liters, "Сметана");
     }
 }

@@ -8,15 +8,15 @@ import course2.oop.task1.data.products.MeasureUnit;
  */
 public abstract class BaseMilkProducts extends BaseProduct {
 
-    public BaseMilkProducts(double cost, int expDate, int productionDate, MeasureUnit mu) {
+    protected BaseMilkProducts(Double cost, Integer expDate, Integer productionDate, MeasureUnit mu) {
         super(cost, expDate, productionDate, mu);
     }
 
-    public BaseMilkProducts() {
+    protected BaseMilkProducts() {
         super();
     }
 
-    public BaseMilkProducts(MeasureUnit mu) {
-        super(mu);
+    protected BaseMilkProducts(MeasureUnit mu, String name) {
+        super(mu, name);
     }
 }

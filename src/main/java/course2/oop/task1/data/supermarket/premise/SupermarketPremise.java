@@ -15,6 +15,10 @@ public abstract class SupermarketPremise {
         products = new HashMap<BaseProduct, Double>();
     }
 
+    public SupermarketPremise(Map<BaseProduct, Double> products) {
+        this.products = products;
+    }
+
     public Map<BaseProduct, Double> getProducts() {
         return products;
     }

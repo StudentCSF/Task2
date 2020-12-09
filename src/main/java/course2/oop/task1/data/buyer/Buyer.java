@@ -9,16 +9,16 @@ import java.util.Set;
  * Данный класс описывает покупателя
  */
 public class Buyer {
-    private int age;
-    private double availableMoney;
+    private Integer age;
+    private Double availableMoney;
     private Map<BaseProduct, Double> shoppingList;
     private Set<BuyerLimitations> limitations;
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public double getAvailableMoney() {
+    public Double getAvailableMoney() {
         return availableMoney;
     }
 
@@ -30,11 +30,11 @@ public class Buyer {
         return limitations;
     }
 
-    public void setAvailableMoney(double availableMoney) {
+    public void setAvailableMoney(Double availableMoney) {
         this.availableMoney = availableMoney;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

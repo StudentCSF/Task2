@@ -1,22 +1,28 @@
 package course2.oop.task1.data.products;
 
+
+import com.google.gson.annotations.Expose;
+
 /**
  * Данный класс является самым общим (родительским) классом для всех продуктов
  */
 public abstract class BaseProduct {
-    protected double cost;
-    protected int expDate;
-    protected int productionDate;
+    protected Double cost;
+    protected Integer expDate;
+    protected Integer productionDate;
     protected MeasureUnit mu;
+    @Expose(serialize = false, deserialize = false)
+    protected String name;
 
     protected BaseProduct() {
     }
 
-    protected BaseProduct(MeasureUnit mu) {
+    protected BaseProduct(MeasureUnit mu, String name) {
         this.mu = mu;
+        this.name = name;
     }
 
-    protected BaseProduct(double cost, int expDate, int productionDate, MeasureUnit mu) {
+    protected BaseProduct(Double cost, Integer expDate, Integer productionDate, MeasureUnit mu) {
         this.cost = cost;
         this.expDate = expDate;
         this.productionDate = productionDate;
@@ -27,19 +33,19 @@ public abstract class BaseProduct {
         this.productionDate = productionDate;
     }
 
-    public double getCost() {
+    public Double getCost() {
         return this.cost;
     }
 
-    public void setCost(double newCost) {
+    public void setCost(Double newCost) {
         this.cost = newCost;
     }
 
-    public int getProductionDate() {
+    public Integer getProductionDate() {
         return this.productionDate;
     }
 
-    public int getExpDate() {
+    public Integer getExpDate() {
         return this.expDate;
     }
 
@@ -47,12 +53,25 @@ public abstract class BaseProduct {
         return this.mu;
     }
 
-    public void setExpDate(int expDate) {
+    public void setExpDate(Integer expDate) {
         this.expDate = expDate;
     }
 
-    public void setProductionDate(int productionDate) {
+    public void setProductionDate(Integer productionDate) {
         this.productionDate = productionDate;
     }
 
+    public MeasureUnit getMu() {
+        return mu;
+    }
+
+    public void setMu(MeasureUnit mu) {
+        this.mu = mu;
+    }
+
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

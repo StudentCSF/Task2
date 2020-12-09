@@ -1,5 +1,6 @@
 package course2.oop.task1.services;
 
+import com.google.gson.Gson;
 import course2.oop.task1.data.products.BaseProduct;
 import course2.oop.task1.data.products.MeasureUnit;
 import course2.oop.task1.data.products.green_grocery.*;
@@ -26,6 +27,8 @@ import java.util.Map;
  * Класс, способный устанавливать случайные параметры проудкту
  */
 public class ProductService {
+    private Gson gson = new Gson();
+    private Integer counter = 0;
 
     /**
      * метод, создающий случайный набор продуктов
@@ -54,7 +57,7 @@ public class ProductService {
     }
 
     /**
-     * методд, устанавливающий случайные параметры продукту
+     * метод, устанавливающий случайные параметры продукту
      * @param prod - продукт
      * @param date - дата производства
      */
@@ -87,7 +90,7 @@ public class ProductService {
             case 10: return new Cucumber();
             case 11: return new Grapes();
             case 12: return new Orange();
-            case 13: return new Orion();
+            case 13: return new Onion();
             case 14: return new Potato();
             case 15: return new Tomato();
             case 16: return new BuckWheat();
@@ -100,7 +103,7 @@ public class ProductService {
             case 23: return new BoiledSausage();
             case 24: return new Meat();
             case 25: return new MincedMeat();
-            case 26: return new Sausages();
+            case 26: return new Sausage();
             case 27: return new SmokedSausage();
             case 28: return new Butter();
             case 29: return new Cheese();

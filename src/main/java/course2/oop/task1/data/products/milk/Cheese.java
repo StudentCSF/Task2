@@ -5,11 +5,6 @@ import course2.oop.task1.data.products.MeasureUnit;
 public class Cheese extends BaseMilkProducts {
 
     public Cheese() {
-        super(MeasureUnit.kg);
-    }
-
-    @Override
-    public String toString() {
-        return "Сыр";
+        super(MeasureUnit.kg, "Сыр");
     }
 }
