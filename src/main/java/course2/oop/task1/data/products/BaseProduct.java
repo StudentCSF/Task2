@@ -1,8 +1,5 @@
 package course2.oop.task1.data.products;
 
-
-import com.google.gson.annotations.Expose;
-
 /**
  * Данный класс является самым общим (родительским) классом для всех продуктов
  */
@@ -11,7 +8,6 @@ public abstract class BaseProduct {
     protected Integer expDate;
     protected Integer productionDate;
     protected MeasureUnit mu;
-    @Expose(serialize = false, deserialize = false)
     protected String name;
 
     protected BaseProduct() {

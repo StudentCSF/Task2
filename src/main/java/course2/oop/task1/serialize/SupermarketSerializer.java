@@ -1,4 +1,5 @@
 package course2.oop.task1.serialize;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import course2.oop.task1.data.products.BaseProduct;

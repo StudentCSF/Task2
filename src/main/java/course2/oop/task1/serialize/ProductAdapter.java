@@ -19,93 +19,23 @@ import course2.oop.task1.data.products.meat.*;
 import course2.oop.task1.data.products.milk.*;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProductAdapter implements JsonDeserializer<BaseProduct>, JsonSerializer<BaseProduct> {
+    private Map<String, Class<? extends BaseProduct>> map;
+
+    public ProductAdapter() {
+        setMap();
+    }
+
+
+
     public BaseProduct deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
         JsonElement elem = jsonElement.getAsJsonObject().get("BaseProduct");
         JsonObject object = elem.getAsJsonObject();
         String productType = context.deserialize(object.getAsJsonPrimitive("name"), String.class);
-        switch (productType) {
-            case "Хлеб":
-                return context.deserialize(elem, Bread.class);
-            case "Батон":
-                return context.deserialize(elem, Loaf.class);
-            case "Порошок":
-                return context.deserialize(elem, Powder.class);
-            case "Шампунь":
-                return context.deserialize(elem, Shampoo.class);
-            case "Мыло":
-                return context.deserialize(elem, Soap.class);
-            case "Пиво":
-                return context.deserialize(elem, Beer.class);
-            case "Водка":
-                return context.deserialize(elem, Vodka.class);
-            case "Вино":
-                return context.deserialize(elem, Wine.class);
-            case "Сок":
-                return context.deserialize(elem, Juice.class);
-            case "Лимонад":
-                return context.deserialize(elem, Lemonade.class);
-            case "Вода":
-                return context.deserialize(elem, Water.class);
-            case "Яблоко":
-                return context.deserialize(elem, Apple.class);
-            case "Банан":
-                return context.deserialize(elem, Banana.class);
-            case "Огурец":
-                return context.deserialize(elem, Cucumber.class);
-            case "Виноград":
-                return context.deserialize(elem, Grapes.class);
-            case "Лук":
-                return context.deserialize(elem, Onion.class);
-            case "Апельсин":
-                return context.deserialize(elem, Orange.class);
-            case "Картофель":
-                return context.deserialize(elem, Potato.class);
-            case "Помидор":
-                return context.deserialize(elem, Tomato.class);
-            case "Гречка":
-                return context.deserialize(elem, BuckWheat.class);
-            case "Конфеты":
-                return context.deserialize(elem, Candy.class);
-            case "Печенье":
-                return context.deserialize(elem, Cookie.class);
-            case "Макароны":
-                return context.deserialize(elem, Macaroni.class);
-            case "Рис":
-                return context.deserialize(elem, Rice.class);
-            case "Соль":
-                return context.deserialize(elem, Salt.class);
-            case "Сахар":
-                return context.deserialize(elem, Sugar.class);
-            case "Вареная колбаса":
-                return context.deserialize(elem, BoiledSausage.class);
-            case "Мясо":
-                return context.deserialize(elem, Meat.class);
-            case "Фарш":
-                return context.deserialize(elem, MincedMeat.class);
-            case "Сосиска":
-                return context.deserialize(elem, Sausage.class);
-            case "Копченая колбаса":
-                return context.deserialize(elem, SmokedSausage.class);
-            case "Сливочное масло":
-                return context.deserialize(elem, Butter.class);
-            case "Сыр":
-                return context.deserialize(elem, Cheese.class);
-            case "Творог":
-                return context.deserialize(elem, Curd.class);
-            case "Кефир":
-                return context.deserialize(elem, Kefir.class);
-            case "Молоко":
-                return context.deserialize(elem, Milk.class);
-            case "Сметана":
-                return context.deserialize(elem, SourCream.class);
-            case "Йогурт":
-                return context.deserialize(elem, Yogurt.class);
-            default:
-                System.out.println("Product deserialize error");
-        }
-        return null;
+        return context.deserialize(elem, map.get(productType));
     }
 
     public JsonElement serialize(BaseProduct product, Type type, JsonSerializationContext context) {
@@ -269,5 +199,47 @@ public class ProductAdapter implements JsonDeserializer<BaseProduct>, JsonSerial
         }
         result.add("BaseProduct", elem);
         return result;
+    }
+
+    private void setMap() {
+        this.map = new HashMap<>();
+        map.put("Хлеб", Bread.class);
+        map.put("Йогурт", Yogurt.class);
+        map.put("Сметана", SourCream.class);
+        map.put("Молоко", Milk.class);
+        map.put("Кефир", Kefir.class);
+        map.put("Творог", Curd.class);
+        map.put("Сыр", Cheese.class);
+        map.put("Сливочное масло", Butter.class);
+        map.put("Копченая колбаса", SmokedSausage.class);
+        map.put("Сосиска", Sausage.class);
+        map.put("Батон", Loaf.class);
+        map.put("Порошок", Powder.class);
+        map.put("Шампунь", Shampoo.class);
+        map.put("Мыло", Soap.class);
+        map.put("Сок", Juice.class);
+        map.put("Лимонад", Lemonade.class);
+        map.put("Вода", Water.class);
+        map.put("Пиво", Beer.class);
+        map.put("Водка", Vodka.class);
+        map.put("Вино", Wine.class);
+        map.put("Яблоко", Apple.class);
+        map.put("Банан", Banana.class);
+        map.put("Огурец", Cucumber.class);
+        map.put("Виноград", Grapes.class);
+        map.put("Лук", Onion.class);
+        map.put("Апельсин", Orange.class);
+        map.put("Помидор", Tomato.class);
+        map.put("Картофель", Potato.class);
+        map.put("Гречка", BuckWheat.class);
+        map.put("Конфеты", Candy.class);
+        map.put("Печенье", Cookie.class);
+        map.put("Макароны", Macaroni.class);
+        map.put("Рис", Rice.class);
+        map.put("Соль", Salt.class);
+        map.put("Сахар", Sugar.class);
+        map.put("Вареная колбаса", BoiledSausage.class);
+        map.put("Мясо", Meat.class);
+        map.put("Фарш", MincedMeat.class);
     }
 }
